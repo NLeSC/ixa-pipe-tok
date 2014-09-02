@@ -89,12 +89,14 @@ public class Annotate {
    * @return KAFDocument kaf containing WF with tokens
    */
   public void tokenizedToKAF(KAFDocument kaf) {
+    System.err.println("Timestamp EHU-tok start work: " + System.currentTimeMillis());
     List<Token> tokens = tokenizer.tokenize();
     // remove paragraphs followed by lowercase words
     List<Integer> spuriousParas = getSpuriousParas(tokens);
     removeSpuriousParas(tokens,spuriousParas);
     //segment
     List<List<Token>> sentences = segmenter.segment(tokens);
+    System.err.println("Timestamp EHU-tok end work: " + System.currentTimeMillis());
     for (List<Token> sentence : sentences) {
       noSents = noSents + 1;
       for (Token token : sentence) {

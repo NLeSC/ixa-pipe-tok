@@ -102,8 +102,10 @@ public class CLI {
 
   public static void main(String[] args) throws IOException {
 
+    System.err.println("Timestamp EHU-tok start in-command: " + System.currentTimeMillis());
     CLI cmdLine = new CLI();
     cmdLine.parseCLI(args);
+    System.err.println("Timestamp EHU-tok end in-command: " + System.currentTimeMillis());
   }
 
   /**
@@ -168,6 +170,7 @@ public class CLI {
 
       KAFDocument.LinguisticProcessor newLp = kaf.addLinguisticProcessor("text", "ixa-pipe-tok-" + lang, version);
       newLp.setBeginTimestamp();
+
         Annotate annotator = new Annotate(breader, normalize, paras,
             tokenizerType);
         if (noTok) {
@@ -184,6 +187,7 @@ public class CLI {
     else {
       Annotate annotator = new Annotate(breader, normalize, paras,
           tokenizerType);
+
       if (outputFormat.equalsIgnoreCase("conll")) {
         if (parsedArguments.getBoolean("offsets")) {
           bwriter.write(annotator.tokenizeToCoNLL());
@@ -196,6 +200,8 @@ public class CLI {
       else {
         bwriter.write(annotator.tokenizeToText());
       }
+
+      
     }// annotation options end here
 
     bwriter.close();
