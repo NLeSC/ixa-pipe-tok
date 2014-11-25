@@ -38,6 +38,7 @@ import net.sourceforge.argparse4j.inf.Subparsers;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.jdom2.JDOMException;
 
 import es.ehu.si.ixa.pipe.tok.eval.TokenizerEvaluator;
 
@@ -100,7 +101,7 @@ public class CLI {
     loadEvalParameters();
   }
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException, JDOMException {
 
     System.err.println("Timestamp EHU-tok start in-command: " + System.currentTimeMillis());
     CLI cmdLine = new CLI();
@@ -116,7 +117,7 @@ public class CLI {
    * @throws IOException
    *           exception if problems with the incoming data
    */
-  public final void parseCLI(final String[] args) throws IOException {
+  public final void parseCLI(final String[] args) throws IOException, JDOMException {
     try {
       parsedArguments = argParser.parseArgs(args);
       System.err.println("CLI options: " + parsedArguments);
@@ -134,7 +135,7 @@ public class CLI {
   }
 
   public final void annotate(final InputStream inputStream,
-      final OutputStream outputStream) throws IOException {
+      final OutputStream outputStream) throws IOException, JDOMException {
     String tokenizerType = parsedArguments.getString("tokenizer");
     String outputFormat = parsedArguments.getString("outputFormat");
     String normalize = parsedArguments.getString("normalize");
@@ -171,8 +172,10 @@ public class CLI {
       KAFDocument.LinguisticProcessor newLp = kaf.addLinguisticProcessor("text", "ixa-pipe-tok-" + lang, version);
       newLp.setBeginTimestamp();
 
+        System.err.println("Timestamp EHU-tok start setup: " + System.currentTimeMillis());
         Annotate annotator = new Annotate(breader, normalize, paras,
             tokenizerType);
+        System.err.println("Timestamp EHU-tok end setup: " + System.currentTimeMillis());
         if (noTok) {
           annotator.tokensToKAF(breader, kaf);
         }
